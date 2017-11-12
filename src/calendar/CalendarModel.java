@@ -30,7 +30,7 @@ enum LONGDAYS
 */
 public class CalendarModel 
 {
-	public GregorianCalendar cal;
+	private GregorianCalendar cal;
 	MONTHS[] arrayOfMonths = MONTHS.values();
 	SHORTMONTHS[] arrayOfShortMonths = SHORTMONTHS.values();
 	DAYS[] arrayOfDays = DAYS.values();
@@ -41,9 +41,11 @@ public class CalendarModel
 	 * Constructs a calendar
 	 * @param c a GregorianCalendar is passed in
 	 */
-	public CalendarModel(GregorianCalendar c) 
+	public CalendarModel() 
 	{
-		cal = c;
+		cal = new GregorianCalendar();
+		//cal.set(Calendar.YEAR, 2014);
+		//cal.set(Calendar.MONTH, 2);
 		myMap = new TreeMap <GregorianCalendar, TreeSet<Event>>();
 		load();
 	}
@@ -69,15 +71,15 @@ public class CalendarModel
 		test += "\n";
 
 		// First Day of the Month
-		GregorianCalendar temp = new GregorianCalendar(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), 1);
+		GregorianCalendar temp = new GregorianCalendar(c.get(Calendar.YEAR), c.get(Calendar.MONTH), 1);
 		int firstDayOfWeek = temp.get(Calendar.DAY_OF_WEEK);
 		int maxDayOfMonth = temp.getActualMaximum(Calendar.DAY_OF_MONTH);
 		int i = 1; // The Day of the month
 		for (int j = 1; j < maxDayOfMonth + firstDayOfWeek; j++) 
 		{
-			temp.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), i);
+			temp.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), i);
 			if (j == firstDayOfWeek) {
-				if (isToday(temp) == true)
+				if (isTheDay(c, temp) == true)
 				{
 					//System.out.print(" [" + i + "] ");
 					test += " [" + i + "] ";
@@ -94,7 +96,7 @@ public class CalendarModel
 			{
 				if (i >= 10)
 				{
-					if (isToday(temp) == true)
+					if (isTheDay(c, temp) == true)
 					{
 						//System.out.print("[" + i + "] ");
 						test += "[" + i + "] ";
@@ -107,7 +109,7 @@ public class CalendarModel
 					i++;
 					}
 				}
-				 else if (isToday(temp) == true)
+				 else if (isTheDay(c, temp) == true)
 					{
 					 //System.out.print("[" +i + "]  ");
 					 test +=  "[" +i + "]  ";
@@ -154,6 +156,18 @@ public class CalendarModel
 		if (cal.get(Calendar.YEAR) == temp.get(Calendar.YEAR)) {
 			if (cal.get(Calendar.MONTH) == temp.get(Calendar.MONTH)) {
 				if (cal.get(Calendar.DAY_OF_MONTH) == temp.get(Calendar.DAY_OF_MONTH)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public boolean isTheDay(GregorianCalendar today, GregorianCalendar target)
+	{
+		if (today.get(Calendar.YEAR) == target.get(Calendar.YEAR)) {
+			if (today.get(Calendar.MONTH) == target.get(Calendar.MONTH)) {
+				if (today.get(Calendar.DAY_OF_MONTH) == target.get(Calendar.DAY_OF_MONTH)) {
 					return true;
 				}
 			}
@@ -320,16 +334,25 @@ public class CalendarModel
 			}
 		}
 	}
-	
+	public String getDateDescription(GregorianCalendar c)
+	{
+		//GregorianCalendar viewCal = new GregorianCalendar();
+		LONGDAYS longDay = arrayOfLongDays[c.get(Calendar.DAY_OF_WEEK) -1];
+		int shortMonth = c.get(Calendar.MONTH ) + 1;
+		String dateDesc = "";
+		dateDesc += longDay + ", " + shortMonth + "/" + c.get(Calendar.DAY_OF_MONTH);
+		return dateDesc;
+	}
 	/**
 	 * Shows previous or next days with all scheduled events on that day
 	 * @param sc scanner
 	 */
 	public void dayView(Scanner sc)
 	{
+		//
 		GregorianCalendar viewCal = new GregorianCalendar();
 		LONGDAYS longDay = arrayOfLongDays[viewCal.get(Calendar.DAY_OF_WEEK) -1];
-		SHORTMONTHS shortMonth = arrayOfShortMonths[viewCal.get(Calendar.MONTH)];
+		SHORTMONTHS shortMonth = arrayOfShortMonths[viewCal.get(Calendar.MONTH )];
 		System.out.println(longDay + ", " + shortMonth + " " + viewCal.get(Calendar.DAY_OF_MONTH) + ", " + viewCal.get(Calendar.YEAR));
 		//
 		// Check for Events for that Day
@@ -675,5 +698,10 @@ public class CalendarModel
         {
             System.out.println("Message: " + e.getMessage());
         }
+	}
+	
+	public GregorianCalendar getCalendar()
+	{
+		return cal;
 	}
 }
