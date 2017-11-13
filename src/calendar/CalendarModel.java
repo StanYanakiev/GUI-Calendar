@@ -82,13 +82,13 @@ public class CalendarModel
 				if (isTheDay(c, temp) == true)
 				{
 					//System.out.print(" [" + i + "] ");
-					test += " [" + i + "] ";
+					test += "       [" + i + "]  ";
 					i++;
 				}
 				else
 				{
 					//System.out.print(" " + i + " ");
-					test += "        " + i + "   ";
+					test += "       " + i + "  ";
 					i++;
 				}
 			} 
@@ -118,7 +118,7 @@ public class CalendarModel
 				 else
 				{
 					//System.out.print(i + "  ");
-					 test += i + "   ";
+					 test += " " + i + "  ";
 					i++;
 				}
 			} 
