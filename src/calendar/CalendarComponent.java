@@ -68,7 +68,7 @@ public class CalendarComponent extends Component
 	public void initializeTopPanel()
 	{
 		topPanel = new JPanel();
-		
+		GregorianCalendar changedCal = cal;
 		JButton backButton = new JButton("<");
 		backButton.addActionListener(
 				new ActionListener()
@@ -79,10 +79,14 @@ public class CalendarComponent extends Component
 						
 						
 						cal.add(Calendar.DAY_OF_MONTH, -1);
+						if(changedCal.MONTH != cal.MONTH)
+						{
+							cal.add(Calendar.MONTH, -1);
+						}
 						String day = model.getDateDescription(cal);
 						dayViewDate.setText(day);
-						updateMonthView();
 						dayEventView.setText(model.printDayEvents(model.getCalendar()));
+						updateMonthView();
 						repaint();
 					}
 				});
@@ -96,10 +100,14 @@ public class CalendarComponent extends Component
 						
 						
 						cal.add(Calendar.DAY_OF_MONTH, 1);
+						if(changedCal.MONTH != cal.MONTH)
+						{
+							cal.add(Calendar.MONTH, 1);
+						}
 						String day = model.getDateDescription(cal);
 						dayViewDate.setText(day);
-						updateMonthView();
 						dayEventView.setText(model.printDayEvents(model.getCalendar()));
+						updateMonthView();
 						repaint();
 					}
 				});
@@ -196,10 +204,19 @@ public class CalendarComponent extends Component
 				public void mouseClicked(MouseEvent e) 
 				{
 					String temp = label.getText().replaceAll(" ", "");
-					int day = Integer.parseInt(temp);
-					cal.set(Calendar.DAY_OF_MONTH, day);
-					dayViewDate.setText(model.getDateDescription(cal));
-					repaint();
+					if(temp.length() == 0)
+					{
+						
+					}
+					else
+					{
+						int day = Integer.parseInt(temp);
+						cal.set(Calendar.DAY_OF_MONTH, day);
+						dayViewDate.setText(model.getDateDescription(cal));
+						dayEventView.setText(model.printDayEvents(model.getCalendar()));
+						updateMonthView();
+						repaint();
+					}
 					
 					
 				}
