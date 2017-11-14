@@ -9,7 +9,12 @@ public class SimpleCalendar {
 		
 		CalendarModel model = new CalendarModel();
 		CalendarComponent frame = new CalendarComponent(model);
-		model.calendarView(model.getCalendar());
+		//model.calendarView(model.getCalendar());
+		//model.load();
+		//model.printAllEvents();
+		model.create();
+	
+		model.quit();
 	}
 	
 	//MODEL == calendar 

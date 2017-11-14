@@ -31,11 +31,11 @@ enum LONGDAYS
 public class CalendarModel 
 {
 	private GregorianCalendar cal;
-	MONTHS[] arrayOfMonths = MONTHS.values();
-	SHORTMONTHS[] arrayOfShortMonths = SHORTMONTHS.values();
-	DAYS[] arrayOfDays = DAYS.values();
-	LONGDAYS[] arrayOfLongDays = LONGDAYS.values();
-	TreeMap<GregorianCalendar, TreeSet<Event>> myMap;
+	private MONTHS[] arrayOfMonths = MONTHS.values();
+	private SHORTMONTHS[] arrayOfShortMonths = SHORTMONTHS.values();
+	private DAYS[] arrayOfDays = DAYS.values();
+	private LONGDAYS[] arrayOfLongDays = LONGDAYS.values();
+	private TreeMap<GregorianCalendar, TreeSet<Event>> myMap;
 	
 	/**
 	 * Constructs a calendar
@@ -47,7 +47,7 @@ public class CalendarModel
 		//cal.set(Calendar.YEAR, 2014);
 		//cal.set(Calendar.MONTH, 2);
 		myMap = new TreeMap <GregorianCalendar, TreeSet<Event>>();
-		load();
+		
 	}
 
 /**
@@ -55,85 +55,85 @@ public class CalendarModel
  * @param c a GregorianCalendar is passed in
  */
 	// Display calendar view
-	public String calendarView(GregorianCalendar c)
-	{
-		String test = "";
-		System.out.println("~~~ Main Menu ~~~");
-		//System.out.println(" " + arrayOfMonths[c.get(Calendar.MONTH)] + " " + c.get(Calendar.YEAR));
-		test += arrayOfMonths[c.get(Calendar.MONTH)] + " " + c.get(Calendar.YEAR) + "\n";
-		test += arrayOfDays[0];
-		for (int i = 1; i < arrayOfDays.length; i++) 
-		{
-			test += String.format("%"+ 1 +"s", " ") + arrayOfDays[i];
-			//System.out.printf("%2s ", arrayOfDays[i]);
-		}
-		System.out.println();
-		test += "\n";
-
-		// First Day of the Month
-		GregorianCalendar temp = new GregorianCalendar(c.get(Calendar.YEAR), c.get(Calendar.MONTH), 1);
-		int firstDayOfWeek = temp.get(Calendar.DAY_OF_WEEK);
-		int maxDayOfMonth = temp.getActualMaximum(Calendar.DAY_OF_MONTH);
-		int i = 1; // The Day of the month
-		for (int j = 1; j < maxDayOfMonth + firstDayOfWeek; j++) 
-		{
-			temp.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), i);
-			if (j == firstDayOfWeek) {
-				if (isTheDay(c, temp) == true)
-				{
-					//System.out.print(" [" + i + "] ");
-					test += "       [" + i + "]  ";
-					i++;
-				}
-				else
-				{
-					//System.out.print(" " + i + " ");
-					test += "       " + i + "  ";
-					i++;
-				}
-			} 
-			else if (j > firstDayOfWeek)
-			{
-				if (i >= 10)
-				{
-					if (isTheDay(c, temp) == true)
-					{
-						//System.out.print("[" + i + "] ");
-						test += "[" + i + "] ";
-						i++;
-					}
-					else
-					{
-					//System.out.print(i + " ");
-						test += i + " ";
-					i++;
-					}
-				}
-				 else if (isTheDay(c, temp) == true)
-					{
-					 //System.out.print("[" +i + "]  ");
-					 test +=  "[" +i + "]  ";
-						i++;
-					}
-				 else
-				{
-					//System.out.print(i + "  ");
-					 test += " " + i + "  ";
-					i++;
-				}
-			} 
-			else
-				//System.out.print("   ");
-			test += "   ";
-			if (j % 7 == 0) 
-			{
-				//System.out.println();
-				test += "\n";
-			}
-		}
-		System.out.println(test);
-		return test;
-	}
+//	public String calendarView(GregorianCalendar c)
+//	{
+//		String test = "";
+//		System.out.println("~~~ Main Menu ~~~");
+//		//System.out.println(" " + arrayOfMonths[c.get(Calendar.MONTH)] + " " + c.get(Calendar.YEAR));
+//		test += arrayOfMonths[c.get(Calendar.MONTH)] + " " + c.get(Calendar.YEAR) + "\n";
+//		test += arrayOfDays[0];
+//		for (int i = 1; i < arrayOfDays.length; i++) 
+//		{
+//			test += String.format("%"+ 1 +"s", " ") + arrayOfDays[i];
+//			//System.out.printf("%2s ", arrayOfDays[i]);
+//		}
+//		System.out.println();
+//		test += "\n";
+//
+//		// First Day of the Month
+//		GregorianCalendar temp = new GregorianCalendar(c.get(Calendar.YEAR), c.get(Calendar.MONTH), 1);
+//		int firstDayOfWeek = temp.get(Calendar.DAY_OF_WEEK);
+//		int maxDayOfMonth = temp.getActualMaximum(Calendar.DAY_OF_MONTH);
+//		int i = 1; // The Day of the month
+//		for (int j = 1; j < maxDayOfMonth + firstDayOfWeek; j++) 
+//		{
+//			temp.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), i);
+//			if (j == firstDayOfWeek) {
+//				if (isTheDay(c, temp) == true)
+//				{
+//					//System.out.print(" [" + i + "] ");
+//					test += "       [" + i + "]  ";
+//					i++;
+//				}
+//				else
+//				{
+//					//System.out.print(" " + i + " ");
+//					test += "       " + i + "  ";
+//					i++;
+//				}
+//			} 
+//			else if (j > firstDayOfWeek)
+//			{
+//				if (i >= 10)
+//				{
+//					if (isTheDay(c, temp) == true)
+//					{
+//						//System.out.print("[" + i + "] ");
+//						test += "[" + i + "] ";
+//						i++;
+//					}
+//					else
+//					{
+//					//System.out.print(i + " ");
+//						test += i + " ";
+//					i++;
+//					}
+//				}
+//				 else if (isTheDay(c, temp) == true)
+//					{
+//					 //System.out.print("[" +i + "]  ");
+//					 test +=  "[" +i + "]  ";
+//						i++;
+//					}
+//				 else
+//				{
+//					//System.out.print(i + "  ");
+//					 test += " " + i + "  ";
+//					i++;
+//				}
+//			} 
+//			else
+//				//System.out.print("   ");
+//			test += "   ";
+//			if (j % 7 == 0) 
+//			{
+//				//System.out.println();
+//				test += "\n";
+//			}
+//		}
+//		System.out.println(test);
+//		return test;
+//	}
 	
 	/**
 	 * Prints the main menu options that are avaible to the user
@@ -186,6 +186,7 @@ public class CalendarModel
 			TreeMap<GregorianCalendar, TreeSet<Event>> newMap = (TreeMap<GregorianCalendar, TreeSet<Event>>) in.readObject(); 
 			in.close();  
 			myMap = newMap;
+			System.out.println("Loaded");
 		}
 		catch (IOException ex)
 		{
@@ -220,8 +221,9 @@ public class CalendarModel
 	 * Prints the events scheduled for day
 	 * @param c date set in GregorianCalendar
 	 */
-	public void printDayEvents(GregorianCalendar c)
+	public String printDayEvents(GregorianCalendar c)
 	{
+		String eventsString = "";
 		GregorianCalendar dCal = new GregorianCalendar(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
 		for(GregorianCalendar i: myMap.keySet())
 		{
@@ -230,32 +232,40 @@ public class CalendarModel
 				TreeSet<Event> myTree = myMap.get(i);
 				for(Event x: myTree)
 				{
+					eventsString += x.getTitle() + " ";
+					eventsString += x.getStartingTime().get(Calendar.HOUR_OF_DAY) + ":";
 					System.out.print(x.getTitle() + " "); 
 					System.out.print(x.getStartingTime().get(Calendar.HOUR_OF_DAY) + ":");
 					int sminute = x.getStartingTime().get(Calendar.MINUTE); 
 					if (sminute == 0)
 					{
 						System.out.print("00");
+						eventsString += "00";
 					}
 					
 					else 
 					{
 						System.out.print(x.getStartingTime().get(Calendar.MINUTE) + "");
+						eventsString += x.getStartingTime().get(Calendar.MINUTE) + "";
 					}
 					
 					if((x.getEndingTime() != null) && !(x.getEndingTime().equals(x.getStartingTime())))
 					{
 						System.out.print(" - ");
 						System.out.print(x.getEndingTime().get(Calendar.HOUR_OF_DAY) + ":");
+						eventsString += " - ";
+						eventsString += x.getEndingTime().get(Calendar.HOUR_OF_DAY) + ":";
 						int eminute = x.getEndingTime().get(Calendar.MINUTE); 
 						if (eminute == 0)
 						{
 							System.out.println("00");
+							eventsString += "00\n";
 						}
 						
 						else 
 						{
-							System.out.println(x.getEndingTime().get(Calendar.MINUTE) +"");
+							//System.out.println(x.getEndingTime().get(Calendar.MINUTE) +"");
+							eventsString += x.getEndingTime().get(Calendar.MINUTE) + "\n";
 						}
 					}
 						
@@ -264,7 +274,8 @@ public class CalendarModel
 			}
 		}
 		System.out.println("");
-		
+		eventsString += "\n";
+		return  eventsString;
 	}
 	/**
 	 * Prints the events for a scheduled month
@@ -584,59 +595,82 @@ public class CalendarModel
 		
 	}
 	
-	public void printAllEvents(Event y)
-	{
-		String printEvent = "";
-		printEvent += "\n[" + y.getDate().get(Calendar.YEAR) + "] " + arrayOfMonths[y.getDate().get(Calendar.MONTH)];
-		printEvent += " " + y.getDate().get(Calendar.DAY_OF_MONTH) + ", " + arrayOfLongDays[y.getDate().get(Calendar.DAY_OF_WEEK) -1] + ", " + y.getTitle() + " ";
-		
-		System.out.print(printEvent + y.getStartingTime().get(Calendar.HOUR_OF_DAY) + ":");
-		int sminute = y.getStartingTime().get(Calendar.MINUTE); 
-		if (sminute == 0)
-		{
-			System.out.print("00");
-		}
-		
-		else 
-		{
-			System.out.print(y.getStartingTime().get(Calendar.MINUTE) + "");
-		}
-		
-		if((y.getEndingTime() != null) && !(y.getEndingTime().equals(y.getStartingTime())))
-		{
-			System.out.print(" - ");
-			System.out.print(y.getEndingTime().get(Calendar.HOUR_OF_DAY) + ":");
-			int eminute = y.getEndingTime().get(Calendar.MINUTE); 
-			if (eminute == 0)
-			{
-				System.out.print("00");
-			}
-			
-			else 
-			{
-				System.out.print(y.getEndingTime().get(Calendar.MINUTE) + "");
-			}
-		}
-	}
-
-	/** 
-	 * Shows all event that have been created 
-	 */
-	public void eventList() 
+	public String printAllEvents()
 	{
 		System.out.print("Scheduled Events: ");
+		String printEvent = "";
 		for(GregorianCalendar x: myMap.keySet())
 		{
 			TreeSet<Event> tree = myMap.get(x);
 			for(Event y: tree)
 			{
-				printAllEvents(y);
+
+				
+				printEvent += "\n[" + y.getDate().get(Calendar.YEAR) + "] " + arrayOfMonths[y.getDate().get(Calendar.MONTH)];
+				printEvent += " " + y.getDate().get(Calendar.DAY_OF_MONTH) + ", " + arrayOfLongDays[y.getDate().get(Calendar.DAY_OF_WEEK) -1] + ", " + y.getTitle() + " ";
+				
+				System.out.print(printEvent + y.getStartingTime().get(Calendar.HOUR_OF_DAY) + ":");
+				printEvent += y.getStartingTime().get(Calendar.HOUR_OF_DAY) + ":";
+				
+				int sminute = y.getStartingTime().get(Calendar.MINUTE); 
+				if (sminute == 0)
+				{
+					System.out.print("00");
+					printEvent += "00";
+				}
+				
+				else 
+				{
+					System.out.print(y.getStartingTime().get(Calendar.MINUTE) + "");
+					printEvent += y.getStartingTime().get(Calendar.MINUTE) + "";
+				}
+				
+				if((y.getEndingTime() != null) && !(y.getEndingTime().equals(y.getStartingTime())))
+				{
+					System.out.print(" - ");
+					printEvent += " - " + y.getEndingTime().get(Calendar.HOUR_OF_DAY) + ":";
+					System.out.print(y.getEndingTime().get(Calendar.HOUR_OF_DAY) + ":");
+					int eminute = y.getEndingTime().get(Calendar.MINUTE); 
+					if (eminute == 0)
+					{
+						System.out.print("00");
+						printEvent += "00";
+					}
+					
+					else 
+					{
+						System.out.print(y.getEndingTime().get(Calendar.MINUTE) + "");
+						printEvent += y.getEndingTime().get(Calendar.MINUTE) + "";
+					}
+				}
+				printEvent += "\n";
 				
 			}
 		}
 		System.out.println("\nAll Events Displayed \n");
+		System.out.println(printEvent + "```````ha ```````````");
 		
+		return printEvent;
 	}
+
+	/** 
+	 * Shows all event that have been created 
+	 */
+//	public void eventList() 
+//	{
+//		System.out.print("Scheduled Events: ");
+//		for(GregorianCalendar x: myMap.keySet())
+//		{
+//			TreeSet<Event> tree = myMap.get(x);
+//			for(Event y: tree)
+//			{
+//				printAllEvents(y);
+//				
+//			}
+//		}
+//		System.out.println("\nAll Events Displayed \n");
+//		
+//	}
 	
 	/**
 	 * Deletes a specific or all events 
