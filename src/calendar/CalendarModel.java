@@ -345,6 +345,7 @@ public class CalendarModel
 			}
 		}
 	}
+	// Day Of Week, Month, Day
 	public String getDateDescription(GregorianCalendar c)
 	{
 		//GregorianCalendar viewCal = new GregorianCalendar();
@@ -354,6 +355,18 @@ public class CalendarModel
 		dateDesc += longDay + ", " + shortMonth + "/" + c.get(Calendar.DAY_OF_MONTH);
 		return dateDesc;
 	}
+	
+	// Month, Day, Year
+	public String getDateDescription2(GregorianCalendar c)
+	{
+		//GregorianCalendar viewCal = new GregorianCalendar();
+		
+		int shortMonth = c.get(Calendar.MONTH ) + 1;
+		String dateDesc = "";
+		dateDesc +=shortMonth + "/" + c.get(Calendar.DAY_OF_MONTH) + "/" + c.get(Calendar.YEAR);
+		return dateDesc;
+	}
+	
 	/**
 	 * Shows previous or next days with all scheduled events on that day
 	 * @param sc scanner
@@ -450,14 +463,8 @@ public class CalendarModel
 	 * Checks if an event is conflicting with already existing event
 	 * Creates a new event 
 	 */
-	public void create() {
-		System.out.println("Enter Title of Event");
-		Scanner sc = new Scanner(System.in);
-		String title = sc.nextLine();
-		System.out.println("Enter a date in the following format: MM/DD/YYYY");
-		String date = sc.nextLine();
-		System.out.println("Enter a starting time in a 24 hour clock format");
-		String startingTime = sc.nextLine();
+	public void create(String name, String date, String start, String end) 
+	{
 
 		// Ex 09/12/2017
 		// MONTH
@@ -476,10 +483,10 @@ public class CalendarModel
 		int yearInt = Integer.parseInt(yearSubstring);
 		// StartingTime
 		// HOUR
-		String shourSubstring = startingTime.substring(0, 2);
+		String shourSubstring = start.substring(0, 2);
 		int shourInt = Integer.parseInt(shourSubstring);
 		// MINUTE
-		String sminuteSubstring = startingTime.substring(3, 5);
+		String sminuteSubstring = start.substring(3, 5);
 		int sminuteInt = Integer.parseInt(sminuteSubstring);
 
 		GregorianCalendar dateCal = new GregorianCalendar(yearInt, monthInt - 1, dayInt); // to represent date
@@ -490,22 +497,23 @@ public class CalendarModel
 		Event myEvent;
 		// Ending Time
 		System.out.println("Enter an edning time in a 24 hour clock format (Put N if not applicabale)");
-		String endingTime = sc.nextLine();
-		if (endingTime.equalsIgnoreCase("n"))
+		
+		if (end.equalsIgnoreCase("n"))
 		{
-			myEvent = new Event(title, dateCal, startTimeCal);
+			myEvent = new Event(name, dateCal, startTimeCal);
 		} 
 		else 
 		{
 			// HOUR
-			String ehourSubstring = endingTime.substring(0, 2);
+			String ehourSubstring = end.substring(0, 2);
 			int ehourInt = Integer.parseInt(ehourSubstring);
 			// MINUTE
-			String eminuteSubstring = endingTime.substring(3, 5);
+			String eminuteSubstring = end.substring(3, 5);
 			int eminuteInt = Integer.parseInt(eminuteSubstring);
 			GregorianCalendar endTimeCal = new GregorianCalendar(yearInt, monthInt - 1, dayInt, ehourInt, eminuteInt); // end
 			// calendar
-			myEvent = new Event(title, dateCal, startTimeCal, endTimeCal);
+			System.out.println(name + " | " + dateCal + " | " + startTimeCal + " | " + endTimeCal );
+			myEvent = new Event(name, dateCal, startTimeCal, endTimeCal);
 
 		}
 

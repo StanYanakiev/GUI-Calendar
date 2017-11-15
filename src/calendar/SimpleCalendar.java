@@ -12,7 +12,7 @@ public class SimpleCalendar {
 		//model.calendarView(model.getCalendar());
 		//model.load();
 		//model.printAllEvents();
-		model.create();
+		
 	
 		model.quit();
 	}

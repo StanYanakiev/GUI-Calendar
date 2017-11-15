@@ -27,13 +27,17 @@ public class CalendarComponent extends Component
 	private JPanel monthViewPanel;
 	private JPanel topPanel;
 	private JPanel dayViewPanel;
-	private CalendarModel model;
 	private JTextArea dayViewDate;
-	private GregorianCalendar cal;
 	private JTextArea monthView;
 	private JTextArea dayEventView;
-	private ArrayList<Integer> arrayIndex;
+	private JTextField eventName;
+	private JTextField eventStartTime;
+	private JTextField eventEndTime;
+	private JTextField eventDate;
 	
+	
+	private CalendarModel model;
+	private GregorianCalendar cal;
 	private MONTHS[] arrayOfMonths = MONTHS.values();
 	private SHORTMONTHS[] arrayOfShortMonths = SHORTMONTHS.values();
 	private DAYS[] arrayOfDays = DAYS.values();
@@ -60,7 +64,7 @@ public class CalendarComponent extends Component
 
 
 		
-		
+		//frame.setUndecorated(true);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
@@ -77,15 +81,17 @@ public class CalendarComponent extends Component
 					{
 						System.out.println("Previous Button clicked");
 						
-						
+						//model.getCalendar().add(Calendar.DAY_OF_MONTH, -1);
 						cal.add(Calendar.DAY_OF_MONTH, -1);
 						if(changedCal.MONTH != cal.MONTH)
 						{
 							cal.add(Calendar.MONTH, -1);
 						}
+						
 						String day = model.getDateDescription(cal);
 						dayViewDate.setText(day);
 						dayEventView.setText(model.printDayEvents(model.getCalendar()));
+						//updateMonthView();
 						updateMonthView();
 						repaint();
 					}
@@ -98,12 +104,13 @@ public class CalendarComponent extends Component
 					{
 						System.out.println("Next Button clicked");
 						
-						
+						//model.getCalendar().add(Calendar.DAY_OF_MONTH, 1);
 						cal.add(Calendar.DAY_OF_MONTH, 1);
 						if(changedCal.MONTH != cal.MONTH)
 						{
 							cal.add(Calendar.MONTH, 1);
 						}
+						
 						String day = model.getDateDescription(cal);
 						dayViewDate.setText(day);
 						dayEventView.setText(model.printDayEvents(model.getCalendar()));
@@ -158,12 +165,80 @@ public class CalendarComponent extends Component
 				{
 					public void actionPerformed(ActionEvent e)
 					{
-						System.out.println("Create Button clicked");
+						initializeCreateDialog();
 					}
 				});
 			
 		
 		monthViewPanel.add(createButton, BorderLayout.NORTH);
+	}
+	
+	public void initializeCreateDialog() 
+	{
+		System.out.println("Create Button clicked");
+		JDialog eventDialog = new JDialog();
+		eventDialog.setLayout(new BorderLayout(20, 20));
+		eventDialog.setSize(450, 100);
+		eventDialog.setTitle("Create event");
+		JPanel textFieldPanel = new JPanel();
+
+		// Event Name
+		eventName = new JTextField();
+		eventName.setText("Untitled Event");
+		Border eventNameBorder = BorderFactory.createLineBorder(Color.BLUE, 1);
+		eventName.setBorder(eventNameBorder);
+
+		// Event Date
+		eventDate = new JTextField();
+		eventDate.setText(model.getDateDescription2(cal));
+		Border eventDateBorder = BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1);
+		eventDate.setBorder(eventDateBorder);
+		eventDate.setEditable(false);
+
+		// EventStartTime
+		 eventStartTime = new JTextField();
+		String time = cal.get(Calendar.HOUR_OF_DAY) + ":";
+		int minute = cal.get(Calendar.MINUTE);
+		if (minute < 10) {
+			time += "0" + minute;
+		} else
+			time += cal.get(Calendar.MINUTE);
+
+		eventStartTime.setText(time);
+		eventStartTime.setBorder(eventDateBorder);
+
+		// EventEndTime
+		eventEndTime = new JTextField();
+		eventEndTime.setText("23:59");
+		eventEndTime.setBorder(eventDateBorder);
+
+		// Save
+		JButton saveButton = new JButton("Save");
+		saveButton.addActionListener(
+				new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						String nameString = eventName.getText();
+						String dateString = eventDate.getText();
+						String startString = eventStartTime.getText();
+						String endString = eventEndTime.getText();
+						model.create(nameString, dateString, startString, endString);
+						
+					}
+				});
+
+		// Adds The Text Fields
+		textFieldPanel.add(eventDate);
+		textFieldPanel.add(eventStartTime);
+		textFieldPanel.add(eventEndTime);
+		textFieldPanel.add(saveButton);
+		// Add All Components to the JDialog
+		eventDialog.add(eventName, BorderLayout.NORTH);
+		eventDialog.add(textFieldPanel, BorderLayout.CENTER);
+
+		// eventDialog.pack();
+		eventDialog.setVisible(true);
 	}
 	
 	public void initializeMonthView()
@@ -191,19 +266,18 @@ public class CalendarComponent extends Component
 		monthDayPanel.setLayout(new GridLayout(0,7,9,0));
 		monthDayPanel.setBackground(Color.WHITE);
 		monthDayPanel.setOpaque(true);
-		
-		arrayIndex = new ArrayList<Integer>();
+		monthDayPanel.removeAll();
+
 		
         
 		for (int j = 1; j < maxDayOfMonth + firstDayOfWeek; j++) {
-			JLabel label = new JLabel();
-			Border border = BorderFactory.createLineBorder(Color.BLACK, 1);
-			label.addMouseListener(new MouseAdapter() 
+			JLabel dateLabel = new JLabel();
+			dateLabel.addMouseListener(new MouseAdapter() 
 			{
 				@Override
 				public void mouseClicked(MouseEvent e) 
 				{
-					String temp = label.getText().replaceAll(" ", "");
+					String temp = dateLabel.getText().replaceAll(" ", "");
 					if(temp.length() == 0)
 					{
 						
@@ -211,6 +285,7 @@ public class CalendarComponent extends Component
 					else
 					{
 						int day = Integer.parseInt(temp);
+						System.out.println(day);
 						cal.set(Calendar.DAY_OF_MONTH, day);
 						dayViewDate.setText(model.getDateDescription(cal));
 						dayEventView.setText(model.printDayEvents(model.getCalendar()));
@@ -221,57 +296,62 @@ public class CalendarComponent extends Component
 					
 				}
 			});
+			
+			Border border = BorderFactory.createLineBorder(Color.BLACK, 1);
+		
 			temp.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), i);
 			if (j == firstDayOfWeek) 
 			{
 				if (model.isTheDay(cal, temp) == true) 
 				{
-					label.setText("  " + i);
-					label.setBorder(border);
-					label.setBackground(Color.LIGHT_GRAY);
-					label.setOpaque(true);
+					dateLabel.setText("  " + i);
+					dateLabel.setBorder(border);
+					dateLabel.setBackground(Color.LIGHT_GRAY);
+					dateLabel.setOpaque(true);
 					i++;
 				} else 
 				{
-					label.setText(Integer.toString(i));
+					dateLabel.setText(Integer.toString(i));
+					System.out.println(i + "hi");
 					i++;
 				}
 			} else if (j > firstDayOfWeek) 
 			{
-				
 				if (i >= 10) {
 					if (model.isTheDay(cal, temp) == true) 
 					{
-						label.setText(" " + i);
-						label.setBorder(border);
-						label.setBackground(Color.LIGHT_GRAY);
-						label.setOpaque(true);
+						dateLabel.setText(" " + i);
+						dateLabel.setBorder(border);
+						dateLabel.setBackground(Color.LIGHT_GRAY);
+						dateLabel.setOpaque(true);
 						i++;
 					} else 
 					{
-						label.setText(" " + i);
+						dateLabel.setText(" " + i);
 						i++;
 					}
 				} else if (model.isTheDay(cal, temp) == true) 
 				{
-					label.setText("  " + Integer.toString(i) );
-					label.setBorder(border);
-					label.setBackground(Color.LIGHT_GRAY);
-					label.setOpaque(true);
+					dateLabel.setText("  " + Integer.toString(i) );
+					dateLabel.setBorder(border);
+					dateLabel.setBackground(Color.LIGHT_GRAY);
+					dateLabel.setOpaque(true);
 					i++;
 				} else 
 				{
-					label.setText(Integer.toString(i));
+					dateLabel.setText(Integer.toString(i));
 					i++;
 				}
 			} else
 			{
 				// System.out.print(" ");
-				label.setText("");
-				
+				dateLabel.setText("");
 			}
-			monthDayPanel.add(label);
+			monthDayPanel.add(dateLabel);
+			
 		}
+		
+		
 
 		// monthView.setText(model.calendarView(cal));
 		monthView.setEditable(false);
