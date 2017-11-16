@@ -14,13 +14,14 @@ import java.util.TreeSet;
 import javax.swing.*;
 import javax.swing.border.Border;
 
-
-
 /**
- * 
  * @author Stanislav Yanakiev
- *
+ * 
+ * GUI SimpleCalendaar
+ * 
+ *All Right Reserved To Author
  */
+
 public class CalendarComponent extends Component
 {
 	private JFrame frame;
@@ -45,7 +46,7 @@ public class CalendarComponent extends Component
 	
 	
 	/**
-	 * Creates the main frame of the calendar and initializes all components
+	 * Creates the main frame of the calendar and initializes all components.
 	 */
 	public CalendarComponent(CalendarModel model)
 	{
@@ -69,33 +70,33 @@ public class CalendarComponent extends Component
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
+	/**
+	 * Top Panel includes  the backButton, nextButton, and quitButton.
+	 */
 	public void initializeTopPanel()
 	{
 		topPanel = new JPanel();
 		GregorianCalendar changedCal = cal;
+		// backButton
 		JButton backButton = new JButton("<");
 		backButton.addActionListener(
 				new ActionListener()
 				{
 					public void actionPerformed(ActionEvent e)
-					{
-						System.out.println("Previous Button clicked");
-						
-						//model.getCalendar().add(Calendar.DAY_OF_MONTH, -1);
+					{	
 						cal.add(Calendar.DAY_OF_MONTH, -1);
 						if(changedCal.MONTH != cal.MONTH)
-						{
 							cal.add(Calendar.MONTH, -1);
-						}
 						
 						String day = model.getDateDescription(cal);
 						dayViewDate.setText(day);
 						dayEventView.setText(model.printDayEvents(model.getCalendar()));
-						//updateMonthView();
 						updateMonthView();
 						repaint();
 					}
 				});
+		
+		// nextButton
 		JButton nextButton = new JButton(">");
 		nextButton.addActionListener(
 				new ActionListener()
@@ -118,6 +119,8 @@ public class CalendarComponent extends Component
 						repaint();
 					}
 				});
+		
+		// quitButton
 		JButton quitButton = new JButton("Quit");
 		quitButton.addActionListener(
 				new ActionListener()
@@ -135,8 +138,11 @@ public class CalendarComponent extends Component
 		topPanel.add(quitButton);
 		
 		frame.add(topPanel, BorderLayout.NORTH);
-		
 	}
+	
+	/**
+	 * monthViewPanel includes createButton and a monthView.
+	 */
 	public void initializeMonthViewPanel()
 	{
 		monthViewPanel = new JPanel();
@@ -150,15 +156,17 @@ public class CalendarComponent extends Component
 		frame.add(monthViewPanel, BorderLayout.WEST);
 	}
 	
+	/**
+	 * createButton opens up a JDialog where an event can be created and saved based on the selected date.
+	 */
 	public void initializeCreateButton()
 	{
 		JButton createButton = new JButton("Create");
 		createButton.setBackground(Color.RED);
 		createButton.setForeground(Color.WHITE);
 		createButton.setOpaque(true);
-		createButton.setSize(20,20);
 		createButton.setBorderPainted(false);
-		//createButton.add
+		
 		
 		createButton.addActionListener(
 				new ActionListener()
@@ -173,6 +181,10 @@ public class CalendarComponent extends Component
 		monthViewPanel.add(createButton, BorderLayout.NORTH);
 	}
 	
+	/**
+	 * Includes a textFieldPanel that stores JTextFields for the title, date, start time, and end time of the event.
+	 * A save button adds the event to the TreeMap in the model.
+	 */
 	public void initializeCreateDialog() 
 	{
 		System.out.println("Create Button clicked");
@@ -224,6 +236,13 @@ public class CalendarComponent extends Component
 						String startString = eventStartTime.getText();
 						String endString = eventEndTime.getText();
 						model.create(nameString, dateString, startString, endString);
+						if (model.exists)
+						{
+							JOptionPane.showMessageDialog(null, "This Event Conflicts With Another Event \nEvent Not Created");
+						}
+						repaint();
+						eventDialog.dispose();
+						
 						
 					}
 				});
@@ -241,9 +260,15 @@ public class CalendarComponent extends Component
 		eventDialog.setVisible(true);
 	}
 	
+	/**
+	 * Includes JTextArea that has the Month and Year of the calendarView we are on, plus the days of the week from Sunday(Su) to Saturday(Sa).
+	 * monthDayPanel includes of multiple JLabels that store the day of the month.
+	 */
 	public void initializeMonthView()
 	{
+		
 		JPanel monthCalendarPanel = new JPanel();
+		monthCalendarPanel.removeAll();
 		monthCalendarPanel.setLayout(new BorderLayout());
 
 		monthView = new JTextArea();
@@ -256,7 +281,7 @@ public class CalendarComponent extends Component
 		}
 		monthView.setText(MonthDateFormat);
 
-		//
+		// Displays the days of the month
 		GregorianCalendar temp = new GregorianCalendar(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), 1);
 		int firstDayOfWeek = temp.get(Calendar.DAY_OF_WEEK);
 		int maxDayOfMonth = temp.getActualMaximum(Calendar.DAY_OF_MONTH);
@@ -267,9 +292,7 @@ public class CalendarComponent extends Component
 		monthDayPanel.setBackground(Color.WHITE);
 		monthDayPanel.setOpaque(true);
 		monthDayPanel.removeAll();
-
 		
-        
 		for (int j = 1; j < maxDayOfMonth + firstDayOfWeek; j++) {
 			JLabel dateLabel = new JLabel();
 			dateLabel.addMouseListener(new MouseAdapter() 
@@ -277,10 +300,13 @@ public class CalendarComponent extends Component
 				@Override
 				public void mouseClicked(MouseEvent e) 
 				{
+					//String temp1 =((JLabel)e.getSource()).getText();
+			
 					String temp = dateLabel.getText().replaceAll(" ", "");
+				
 					if(temp.length() == 0)
 					{
-						
+						//do nothing
 					}
 					else
 					{
@@ -312,7 +338,6 @@ public class CalendarComponent extends Component
 				} else 
 				{
 					dateLabel.setText(Integer.toString(i));
-					System.out.println(i + "hi");
 					i++;
 				}
 			} else if (j > firstDayOfWeek) 
@@ -344,15 +369,12 @@ public class CalendarComponent extends Component
 				}
 			} else
 			{
-				// System.out.print(" ");
 				dateLabel.setText("");
 			}
 			monthDayPanel.add(dateLabel);
 			
 		}
-		
-		
-
+	
 		// monthView.setText(model.calendarView(cal));
 		monthView.setEditable(false);
 		
@@ -363,15 +385,17 @@ public class CalendarComponent extends Component
 		monthViewPanel.add(monthCalendarPanel, BorderLayout.CENTER);
 	}
 
-	
+	/**
+	 * Includes a dayViewPanel with components dayViewDate JTextArea and dayEventView JTextArea
+	 * dayViewDate consists of the day of the week and date in format of MM/DD.
+	 * dayEventView consists of all the events scheduled for the selected Day
+	 */
 	public void initializeDayViewPanel()
 	{
 		dayViewPanel = new JPanel();
 		dayViewPanel.setLayout(new BorderLayout(0, 20));
 		dayViewPanel.setBackground(Color.WHITE);
 		
-		
-
 		// Date Shown
 		String today = model.getDateDescription(cal);
 		dayViewDate = new JTextArea();
@@ -380,25 +404,22 @@ public class CalendarComponent extends Component
 		Border greyBoarder = BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1);
 		dayViewDate.setBorder(greyBoarder);
 		
-		
-	
-		
+
 		//Prints the event for current day
-		//dayEventView = new JTextArea(model.printAllEvents());
 		dayEventView = new JTextArea(model.printDayEvents(model.getCalendar()));
 		dayEventView.setEditable(false);
 		dayEventView.setBorder(greyBoarder);
-		
-		
 		
 		dayViewPanel.add(dayViewDate, BorderLayout.NORTH);
 		dayViewPanel.add(dayEventView, BorderLayout.CENTER);
 		frame.add(dayViewPanel, BorderLayout.CENTER);
 	}
 	
+	/**
+	 * Updates the monthView by calling initializeMonthView()
+	 */
 	public void updateMonthView()
 	{
-		//monthView.setText(model.calendarView(cal));
 		initializeMonthView();
 	}
 }
