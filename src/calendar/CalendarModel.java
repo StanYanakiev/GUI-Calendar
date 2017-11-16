@@ -24,9 +24,15 @@ enum LONGDAYS
 {
 	Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday;
 }
-
-/** 
-* Creates a calendar with multiple options
+/**
+ * @author Stanislav Yanakiev
+ * 
+ * GUI SimpleCalendaar
+ * Creates a model for the GUI Calendar to function
+ * 
+ * November 16, 2017
+ * All Right Reserved To Author
+* 
 */
 public class CalendarModel 
 {
@@ -36,7 +42,7 @@ public class CalendarModel
 	private DAYS[] arrayOfDays = DAYS.values();
 	private LONGDAYS[] arrayOfLongDays = LONGDAYS.values();
 	private TreeMap<GregorianCalendar, TreeSet<Event>> myMap;
-	boolean exists;
+	boolean exists = false;
 	
 	/**
 	 * Constructs a calendar
@@ -318,7 +324,6 @@ public class CalendarModel
 
 		Event myEvent;
 		// Ending Time
-		System.out.println("Enter an edning time in a 24 hour clock format (Put N if not applicabale)");
 		
 		if (end.equalsIgnoreCase("n"))
 		{
@@ -334,7 +339,6 @@ public class CalendarModel
 			int eminuteInt = Integer.parseInt(eminuteSubstring);
 			GregorianCalendar endTimeCal = new GregorianCalendar(yearInt, monthInt - 1, dayInt, ehourInt, eminuteInt); // end
 			// calendar
-			System.out.println(name + " | " + dateCal + " | " + startTimeCal + " | " + endTimeCal );
 			myEvent = new Event(name, dateCal, startTimeCal, endTimeCal);
 
 		}
@@ -343,29 +347,28 @@ public class CalendarModel
 				+ arrayOfShortMonths[dateCal.get(Calendar.MONTH)] + " " + dateCal.get(Calendar.DAY_OF_MONTH) + ", "
 				+ dateCal.get(Calendar.YEAR));
 
-		exists = false;
+		boolean alreadyExists = false;
 		for (GregorianCalendar y : myMap.keySet()) 
 		{
 			if (y.equals(dateCal))
 			{
-				exists = true; //already at least one event for that day
+				alreadyExists = true; //already at least one event for that day
 				TreeSet<Event> mySet = myMap.get(dateCal);
 				for (Event x : mySet) 
 				{
 					
 					if (x.equals(myEvent)) 
 					{
-						System.out.print("Event Conflicts With Another \n");
+						alreadyExists = true;
 						exists = true;
 					}
 				}
 				mySet.add(myEvent); 
 				myMap.put(dateCal, mySet);
-				System.out.println("Another Event Added To The Specified Date \n");
 			}
 		}
 
-		if (exists == false)
+		if (alreadyExists == false)
 		{
 			TreeSet<Event> set = new TreeSet<>();
 			set.add(myEvent);

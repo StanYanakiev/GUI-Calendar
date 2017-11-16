@@ -5,10 +5,16 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Scanner;
-
 /**
-*Creates an Event that stores a Title, Date, Starting Time, and Ending Time
-*/
+ * @author Stanislav Yanakiev
+ * 
+ * GUI SimpleCalendaar
+ * Creates an Event Modelthat stores a Title, Date, Starting Time, and Ending Time
+ * 
+ * November 16, 2017
+ * All Right Reserved To Author
+ */
+
 public class Event implements Comparable<Event>, Serializable
 {
 	private String title;

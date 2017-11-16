@@ -17,9 +17,11 @@ import javax.swing.border.Border;
 /**
  * @author Stanislav Yanakiev
  * 
- * GUI SimpleCalendaar
+ * GUI SimpleCalendar
+ * Creates the Controller and View component of the GUI Calendar
  * 
- *All Right Reserved To Author
+ * November 16, 2017
+ * All Right Reserved To Author
  */
 
 public class CalendarComponent extends Component
@@ -236,7 +238,7 @@ public class CalendarComponent extends Component
 						String startString = eventStartTime.getText();
 						String endString = eventEndTime.getText();
 						model.create(nameString, dateString, startString, endString);
-						if (model.exists)
+						if (model.exists == true)
 						{
 							JOptionPane.showMessageDialog(null, "This Event Conflicts With Another Event \nEvent Not Created");
 						}
