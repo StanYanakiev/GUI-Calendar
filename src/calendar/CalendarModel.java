@@ -272,11 +272,21 @@ public class CalendarModel
 	 */
 	public String getDateDescription2(GregorianCalendar c)
 	{
-		//GregorianCalendar viewCal = new GregorianCalendar();
-		
-		int shortMonth = c.get(Calendar.MONTH ) + 1;
+
+
+		String month = "";
 		String dateDesc = "";
-		dateDesc +=shortMonth + "/" + c.get(Calendar.DAY_OF_MONTH) + "/" + c.get(Calendar.YEAR);
+		String monthDay = "";
+		if ((c.get(Calendar.MONTH) + 1) < 10)
+			month = "0" + (c.get(Calendar.MONTH) + 1);
+		else
+			month += (c.get(Calendar.MONTH) + 1);
+		if(c.get(Calendar.DAY_OF_MONTH) < 10)
+			monthDay = "0" + c.get(Calendar.DAY_OF_MONTH);
+		else
+			monthDay = c.get(Calendar.DAY_OF_MONTH) + "";
+		
+		dateDesc +=month + "/" + monthDay + "/" + c.get(Calendar.YEAR);
 		return dateDesc;
 	}
 	

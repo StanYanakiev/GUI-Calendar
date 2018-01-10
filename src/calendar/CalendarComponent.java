@@ -30,6 +30,7 @@ public class CalendarComponent extends Component
 	private JPanel monthViewPanel;
 	private JPanel topPanel;
 	private JPanel dayViewPanel;
+	private JPanel monthCalendarPanel;
 	private JTextArea dayViewDate;
 	private JTextArea monthView;
 	private JTextArea dayEventView;
@@ -105,8 +106,6 @@ public class CalendarComponent extends Component
 				{
 					public void actionPerformed(ActionEvent e)
 					{
-						System.out.println("Next Button clicked");
-						
 						//model.getCalendar().add(Calendar.DAY_OF_MONTH, 1);
 						cal.add(Calendar.DAY_OF_MONTH, 1);
 						if(changedCal.MONTH != cal.MONTH)
@@ -129,7 +128,6 @@ public class CalendarComponent extends Component
 				{
 					public void actionPerformed(ActionEvent e)
 					{
-						System.out.println("Quit Button clicked");
 						model.quit();
 						frame.dispose();
 					}
@@ -233,6 +231,7 @@ public class CalendarComponent extends Component
 				{
 					public void actionPerformed(ActionEvent e)
 					{
+						
 						String nameString = eventName.getText();
 						String dateString = eventDate.getText();
 						String startString = eventStartTime.getText();
@@ -242,8 +241,9 @@ public class CalendarComponent extends Component
 						{
 							JOptionPane.showMessageDialog(null, "This Event Conflicts With Another Event \nEvent Not Created");
 						}
-						repaint();
+						
 						eventDialog.dispose();
+						repaint();
 						
 						
 					}
@@ -269,8 +269,8 @@ public class CalendarComponent extends Component
 	public void initializeMonthView()
 	{
 		
-		JPanel monthCalendarPanel = new JPanel();
-		monthCalendarPanel.removeAll();
+		monthCalendarPanel = new JPanel();
+
 		monthCalendarPanel.setLayout(new BorderLayout());
 
 		monthView = new JTextArea();
@@ -312,6 +312,8 @@ public class CalendarComponent extends Component
 					}
 					else
 					{
+						monthCalendarPanel.removeAll();
+						repaint();
 						int day = Integer.parseInt(temp);
 						System.out.println(day);
 						cal.set(Calendar.DAY_OF_MONTH, day);
@@ -319,6 +321,7 @@ public class CalendarComponent extends Component
 						dayEventView.setText(model.printDayEvents(model.getCalendar()));
 						updateMonthView();
 						repaint();
+						
 					}
 					
 					
@@ -422,6 +425,9 @@ public class CalendarComponent extends Component
 	 */
 	public void updateMonthView()
 	{
+		monthCalendarPanel.removeAll();
+		repaint();
 		initializeMonthView();
+		
 	}
 }
